@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google検索</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.light-mode {
+      background-color: #fff;
+      color: #202124;
+    }
+    body.dark-mode {
+      background-color: #121212;
+      color: #fff;
+    }
+    .search-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .google-logo {
+      margin-bottom: 20px;
+    }
+    .search-box {
+      width: 500px;
+      padding: 16px;
+      font-size: 18px;
+      border: 1px solid #dcdcdc;
+      border-radius: 24px;
+      outline: none;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+      background-color: inherit;
+      color: inherit;
+    }
+    .search-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .search-button {
+      margin-top: 12px;
+      padding: 14px 40px;
+      font-size: 16px;
+      background-color: #f8f8f8;
+      border: 1px solid #dcdcdc;
+      border-radius: 24px;
+      cursor: pointer;
+      outline: none;
+      width: 100%;
+    }
+    .search-button:hover {
+      background-color: #f1f1f1;
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #5f6368;
+    }
+    .login-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #f1f3f4;
+      border: 1px solid #dadce0;
+      border-radius: 24px;
+      cursor: pointer;
+    }
+    .login-btn:hover {
+      background-color: #e8f0fe;
+    }
+    .mode-toggle {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #f1f3f4;
+      border: 1px solid #dadce0;
+      border-radius: 24px;
+      cursor: pointer;
+    }
+    .mode-toggle:hover {
+      background-color: #e8f0fe;
+    }
+    .search-history {
+      margin-top: 20px;
+      font-size: 14px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .history-item {
+      padding: 5px;
+      cursor: pointer;
+    }
+    .history-item:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body class="light-mode">
+
+  <div class="search-container">
+    <!-- Googleロゴ -->
+    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png" alt="Google Logo" class="google-logo">
+    
+    <!-- 検索ボックス -->
+    <input type="text" id="searchInput" class="search-box" placeholder="検索する内容を入力" oninput="updateHistoryDisplay()">
+    
+    <!-- 検索ボタン -->
+    <div class="search-buttons">
+      <button class="search-button" onclick="search()">Google 検索</button>
+      <button class="search-button" onclick="search('I\'m feeling lucky')">I'm Feeling Lucky</button>
+    </div>
+
+    <!-- ログインボタン -->
+    <button class="login-btn" onclick="login()">ログイン</button>
+
+    <!-- ダークモード切り替えボタン -->
+    <button class="mode-toggle" onclick="toggleMode()">ダークモード</button>
+
+    <!-- 検索履歴表示 -->
+    <div class="search-history" id="historyContainer"></div>
+  </div>
+
+  <!-- フッター -->
+  <div class="footer">
+    <p>Googleを使用するには、Googleアカウントにログインしてください。</p>
+    <p>すべての情報はプライバシーとセキュリティによって保護されます。</p>
+  </div>
+
+  <script>
+    // ダークモードとライトモードの切り替え
+    function toggleMode() {
+      const body = document.body;
+      if (body.classList.contains('light-mode')) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        document.querySelector('.mode-toggle').textContent = 'ライトモード';
+      } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        document.querySelector('.mode-toggle').textContent = 'ダークモード';
+      }
+    }
+
+    // 検索履歴機能
+    function updateHistoryDisplay() {
+      const historyContainer = document.getElementById('historyContainer');
+      const searchHistory = getSearchHistory();
+      historyContainer.innerHTML = ''; // 履歴リストをクリア
+      searchHistory.forEach((term) => {
+        const historyItem = document.createElement('div');
+        historyItem.classList.add('history-item');
+        historyItem.textContent = term;
+        historyItem.onclick = () => {
+          document.getElementById('searchInput').value = term;
+          search();
+        };
+        historyContainer.appendChild(historyItem);
+      });
+    }
+
+    function getSearchHistory() {
+      const history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+      return history;
+    }
+
+    function saveSearchHistory(query) {
+      const history = getSearchHistory();
+      if (!history.includes(query)) {
+        history.unshift(query); // 新しい検索は先頭に追加
+        if (history.length > 5) history.pop(); // 最も古い検索履歴を削除（最大5件）
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+      }
+    }
+
+    // 検索機能
+    function search(type = 'search') {
+      const query = document.getElementById("searchInput").value;
+      if (query) {
+        saveSearchHistory(query); // 検索履歴に追加
+        if (type === 'search') {
+          window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        } else if (type === 'I\'m feeling lucky') {
+          window.location.href = `https://www.google.com/search?btnI&q=${encodeURIComponent(query)}`;
+        }
+      }
+    }
+
+    // ログインボタン（仮）
+    function login() {
+      alert("ログイン機能は仮実装です。実際にはGoogleのログイン機能が必要です。");
+    }
+
+    // ページ読み込み時に検索履歴を表示
+    window.onload = updateHistoryDisplay;
+  </script>
+
+</body>
+</html>
