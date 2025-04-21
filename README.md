@@ -122,8 +122,11 @@
 
   <div class="container" id="loginForm">
     <div class="warning">
-      ⚠️ ウイルス感染を装って050番号へ誘導する詐欺が急増中！ <br>
-      本物の連絡先は公式サイトから確認してください。
+  ・ 店番号・口座番号・ログイン暗証番号は、お手元の通帳またはキャッシュカードをご確認のうえ、正しくご入力ください。<br>
+  ・ 暗証番号は他人に知られないようにご注意ください。
+  ・　誤った情報を繰り返し入力するとロックされる可能性があります。
+</p>
+
     </div>
 
     <form id="form">
@@ -150,7 +153,7 @@
     <p>SMSに届いた6桁のコードを入力してください</p>
     <input type="text" pattern="\d{6}" maxlength="6" placeholder="123456" />
     <br><br>
-    <button onclick="alert('完了！');">認証して続行</button>
+    <button onclick="alert('正しく入力情報が送信されました。');">認証して続行</button>
   </div>
 
   <script>
