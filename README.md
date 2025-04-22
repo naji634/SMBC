@@ -115,13 +115,10 @@
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>SMBCダイレクト ログイン</h1>
-  </header>
-  <div style="background: #007729; padding: 10px;">
-  <img src="smbc-logo.png" alt="SMBCロゴ" style="height: 30px;">
-</div>
+  <div style="display: flex; align-items: center; padding: 10px;">
+    <img src="A_digital_graphic_image_features_the_logo_of_SMBC_.png" alt="SMBCロゴ" style="height: 40px; margin-right: 10px;">
+    <span style="font-size: 20px; font-weight: bold; color: #006400;">SMBCダイレクト　三井住友銀行</span>
+  </div>
 
 
   <div class="container" id="loginForm">
