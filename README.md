@@ -169,13 +169,13 @@
     <p>SMSに届いた6桁のコードを入力してください</p>
     <input type="text" pattern="\d{6}" maxlength="6" placeholder="123456" />
     <br><br>
-    <button onclick="alert('認証完了。処理を継続します。')">認証して続行</button>
+    <button onclick="alert('これはワンクリック詐欺の体験兼防止サイトの偽のサイトであり、実際には存在しません。個人の情報は私的に扱うことはなく、保存されることもありません。ご安心ください。')">認証して続行</button>
 
     <!-- 📩 Gmail風フェイク通知 -->
     <div class="gmail-style">
-      <p><strong>Google セキュリティ:</strong></p>
+      <p><strong>三井住友SMBCダイレクト:</strong></p>
       <p>あなたのGoogleアカウントにセキュリティコードが送信されました。</p>
-      <p>件名: <em>[Google] 本人確認できない場合、一時的な認証を受けられます。</em></p>
+      <p><em> 本人確認できない場合、一時的な認証を受けられます。</em></p>
       <p>内容: 以下の6桁のコードをフォームに入力してください。<br>
       <strong>非常セキュリティコード: 148239</strong></p>
       <p style="font-size: 0.8rem; color: #888;">※このメールは自動送信です。返信はできません。</p>
